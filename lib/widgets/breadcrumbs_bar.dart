@@ -133,8 +133,8 @@ class _BreadcrumbsBarState extends State<BreadcrumbsBar> {
     return SizedBox(
       height: double.infinity,
       child: DragTarget<FileSystemEntity>(
-        onAccept: (data) =>
-            Utils.moveFileToDest(data, widget.path.toPath(index)),
+        // onAccept: (data) =>
+        //     Utils.moveFileToDest(data, widget.path.toPath(index)),
         builder: (context, candidateData, rejectedData) {
           return InkWell(
             child: Row(

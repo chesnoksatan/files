@@ -1,3 +1,4 @@
+import 'package:entity/entity.dart';
 import 'package:files/backend/providers.dart';
 import 'package:files/backend/utils.dart';
 import 'package:files/widgets/context_menu/context_menu.dart';

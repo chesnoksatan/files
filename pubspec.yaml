@@ -10,7 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  animations: any
+  platform: ^3.1.0
+  animations: ^2.0.3
   filesize: ^2.0.1
   intl: any
   isar: ^1.0.5
@@ -25,6 +26,15 @@ dependencies:
     git:
       url: https://github.com/HrX03/windows_path_provider.git
   xdg_directories: ^0.2.0
+
+  entity:
+    path: packages/entity
+
+  fetcher_api:
+    path: packages/fetcher_api
+
+  system_entities:
+    path: packages/system_entities
 
 dev_dependencies:
   build_runner: ^2.1.7
