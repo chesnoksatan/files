@@ -45,7 +45,6 @@ class _ProvidersSingleton {
 
   Future<void> _init() async {
     if (_inited) return;
-    WidgetsFlutterBinding.ensureInitialized();
     final dir = await getApplicationDocumentsDirectory();
     _isar = await Isar.open(
       schemas: [EntityStatSchema],
@@ -64,9 +63,29 @@ class _ProvidersSingleton {
     _cacheProxy = null;
     _inited = false;
   }
+
+  void _initSync() {
+    if (_inited) return;
+    WidgetsFlutterBinding.ensureInitialized();
+
+    getApplicationDocumentsDirectory().then((directory) {
+      Isar.open(
+        schemas: [EntityStatSchema],
+        directory: p.join(directory.path, 'isar'),
+      ).then((isar) => _isar = isar);
+    });
+
+    FolderProvider.init().then((provider) => _folderProvider = provider);
+
+    _helper = EntityStatCacheHelper();
+    _cacheProxy = StatCacheProxy();
+    _inited = true;
+  }
 }
 
 Future<void> initProviders() async => _ProvidersSingleton.instance._init();
+
+void initProvidersSync() => _ProvidersSingleton.instance._initSync();
 
 Future<void> disposeProviders() async =>
     _ProvidersSingleton.instance._dispose();

@@ -1,10 +1,10 @@
 import 'package:entity/entity.dart';
 import 'package:files/backend/providers.dart';
-import 'package:files/backend/utils.dart';
 import 'package:files/widgets/context_menu/context_menu.dart';
 import 'package:files/widgets/context_menu/context_menu_entry.dart';
 import 'package:files/widgets/workspace.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TabStrip extends StatelessWidget {
   final List<WorkspaceController> tabs;
@@ -46,12 +46,14 @@ class TabStrip extends StatelessWidget {
                     enabled: allowClosing,
                   ),
                 ],
-                child: _Tab(
-                  tab: tabs[index],
-                  selected: selectedTab == index,
-                  onTap: () => onTabChanged?.call(index),
-                  onClosed: () => onTabClosed?.call(index),
-                  allowClosing: allowClosing,
+                child: ChangeNotifierProvider<WorkspaceController>.value(
+                  builder: (context, child) => _Tab(
+                    selected: selectedTab == index,
+                    onTap: () => onTabChanged?.call(index),
+                    onClosed: () => onTabClosed?.call(index),
+                    allowClosing: allowClosing,
+                  ),
+                  value: tabs[index],
                 ),
               ),
               scrollDirection: Axis.horizontal,
@@ -70,15 +72,13 @@ class TabStrip extends StatelessWidget {
   }
 }
 
-class _Tab extends StatefulWidget {
-  final WorkspaceController tab;
+class _Tab extends StatelessWidget {
   final bool selected;
   final VoidCallback? onTap;
   final VoidCallback? onClosed;
   final bool allowClosing;
 
   const _Tab({
-    required this.tab,
     required this.selected,
     this.onTap,
     this.onClosed,
@@ -86,37 +86,16 @@ class _Tab extends StatefulWidget {
   });
 
   @override
-  State<_Tab> createState() => _TabState();
-}
-
-class _TabState extends State<_Tab> {
-  @override
-  void initState() {
-    super.initState();
-    widget.tab.addListener(updateOnDirChange);
-  }
-
-  @override
-  void dispose() {
-    widget.tab.removeListener(updateOnDirChange);
-    super.dispose();
-  }
-
-  void updateOnDirChange() {
-    if (mounted) setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     final int indexOf = folderProvider.directories.indexWhere(
-      (element) => element.key == widget.tab.currentDir,
+      (element) => element.key == WorkspaceController.of(context).currentDir,
     );
 
     return SizedBox(
       width: 240,
       height: double.infinity,
       child: Material(
-        color: widget.selected
+        color: selected
             ? Theme.of(context).colorScheme.surface
             : Theme.of(context).colorScheme.background,
         shape: RoundedRectangleBorder(
@@ -124,11 +103,10 @@ class _TabState extends State<_Tab> {
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: widget.onTap,
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
                   indexOf != -1
@@ -139,15 +117,16 @@ class _TabState extends State<_Tab> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    Utils.getEntityName(widget.tab.currentDir),
+                    Utils.getEntityName(
+                        WorkspaceController.of(context).currentDir),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 AnimatedOpacity(
-                  opacity: widget.allowClosing ? 1 : 0,
+                  opacity: allowClosing ? 1 : 0,
                   duration: const Duration(milliseconds: 200),
                   child: IconButton(
-                    onPressed: widget.allowClosing ? widget.onClosed : null,
+                    onPressed: allowClosing ? onClosed : null,
                     icon: const Icon(Icons.close),
                     iconSize: 16,
                     splashRadius: 16,
