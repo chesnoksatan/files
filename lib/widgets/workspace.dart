@@ -6,6 +6,7 @@ import 'package:files/backend/path_parts.dart';
 import 'package:files/widgets/breadcrumbs_bar.dart';
 import 'package:files/widgets/context_menu/context_menu_entry.dart';
 import 'package:files/widgets/grid.dart';
+import 'package:files/widgets/table.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,10 +39,10 @@ class _FilesWorkspaceState extends State<FilesWorkspace> {
   IconData get viewIcon {
     switch (controller.view) {
       case WorkspaceView.grid:
-        return Icons.grid_view_outlined;
+        return Icons.list_outlined;
       case WorkspaceView.table:
       default:
-        return Icons.list_outlined;
+        return Icons.grid_view_outlined;
     }
   }
 
@@ -403,12 +404,22 @@ class _FilesWorkspaceState extends State<FilesWorkspace> {
       builder: (context) {
         if (!controller.inProgress) {
           if (controller.currentEntities.isNotEmpty) {
-            return FilesGrid(
-              entities: controller.currentEntities,
-              onEntityTap: _onEntityTap,
-              onEntityDoubleTap: _onEntityDoubleTap,
-              // onDropAccept: _onDropAccepted,
-            );
+            switch (controller.view) {
+              case WorkspaceView.grid:
+                return FilesGrid(
+                  entities: controller.currentEntities,
+                  onEntityTap: _onEntityTap,
+                  onEntityDoubleTap: _onEntityDoubleTap,
+                  onDropAccept: _onDropAccepted,
+                );
+              default:
+                return FilesTable(
+                  entities: controller.currentEntities,
+                  onEntityTap: _onEntityTap,
+                  onEntityDoubleTap: _onEntityDoubleTap,
+                  onDropAccept: _onDropAccepted,
+                );
+            }
             // switch (controller.view) {
             //   case WorkspaceView.grid:
             //     return FilesGrid(
@@ -509,6 +520,7 @@ class WorkspaceController with ChangeNotifier {
   double lastVerticalScrollOffset = 0.0;
   final List<double> _columnWidths = [480, 180, 120, 120];
   int _columnIndex = 0;
+
   final List<IEntity> _selectedItems = [];
   double? _loadingProgress;
   StreamSubscription<FileSystemEvent>? directoryStream;

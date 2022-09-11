@@ -49,14 +49,34 @@ class FilesGrid extends StatelessWidget {
           itemBuilder: (context, index) {
             final IEntity entity = entities[index];
 
-            return FileCell(
-              entity: entity,
-              selected: controller.selectedItems.contains(entity),
-              onTap: onEntityTap,
-              onDoubleTap: onEntityDoubleTap,
-              onLongTap: onEntityLongTap,
-              onSecondaryTap: onEntitySecondaryTap,
-              onDropAccept: onDropAccept,
+            return Draggable<IEntity>(
+              data: entity,
+              dragAnchorStrategy: (_, __, ___) => const Offset(32, 32),
+              feedback: DecoratedBox(
+                decoration: BoxDecoration(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Center(
+                  child: Cell(
+                    name: entity.name,
+                    icon: entity.icon,
+                    iconColor: entity.isDirectory
+                        ? Theme.of(context).colorScheme.secondary
+                        : null,
+                  ),
+                ),
+              ),
+              child: FileCell(
+                entity: entity,
+                selected: controller.selectedItems.contains(entity),
+                onTap: onEntityTap,
+                onDoubleTap: onEntityDoubleTap,
+                onLongTap: onEntityLongTap,
+                onSecondaryTap: onEntitySecondaryTap,
+                onDropAccept: onDropAccept,
+              ),
             );
           },
         ),
@@ -87,31 +107,43 @@ class FileCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: selected
-            ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: InkWell(
-        onTap: () => onTap?.call(entity),
-        onDoubleTap: () {
-          onTap?.call(entity);
-          onDoubleTap?.call(entity);
-        },
-        onLongPress: () => onLongTap?.call(entity),
-        child: EntityContextMenu(
-          onOpen: () {
+    return DragTarget<IEntity>(
+      onWillAccept: (data) {
+        if (!entity.isDirectory) return false;
+
+        if (data!.path == entity.path) return false;
+
+        return true;
+      },
+      onAccept: (_) => onDropAccept?.call(entity.path),
+      builder: (context, _, __) => Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: selected
+              ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: InkWell(
+          onTap: () => onTap?.call(entity),
+          onDoubleTap: () {
             onTap?.call(entity);
             onDoubleTap?.call(entity);
           },
-          child: Center(
-            child: Cell(
-              name: entity.name,
-              icon: entity.icon,
-              iconColor: Theme.of(context).colorScheme.secondary,
+          onLongPress: () => onLongTap?.call(entity),
+          child: EntityContextMenu(
+            onOpen: () {
+              onTap?.call(entity);
+              onDoubleTap?.call(entity);
+            },
+            child: Center(
+              child: Cell(
+                name: entity.name,
+                icon: entity.icon,
+                iconColor: entity.isDirectory
+                    ? Theme.of(context).colorScheme.secondary
+                    : null,
+              ),
             ),
           ),
         ),
