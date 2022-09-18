@@ -4,10 +4,10 @@ import 'package:entity/entity.dart';
 import 'package:system_entities/src/system_entity_stats.dart';
 
 class SystemEntity extends IEntity {
-  final FileSystemEntity _entity;
+  FileSystemEntity _entity;
 
   @override
-  final SystemEntityStats stats;
+  SystemEntityStats stats;
 
   SystemEntity({
     required FileSystemEntity entity,
@@ -34,5 +34,41 @@ class SystemEntity extends IEntity {
     }
 
     return EntityType.undefined;
+  }
+
+  @override
+  Future<void> delete({bool recursive = false}) async {
+    _entity.delete(recursive: recursive);
+  }
+
+  @override
+  void deleteSync({bool recursive = false}) {
+    _entity.deleteSync(recursive: recursive);
+  }
+
+  @override
+  Future<SystemEntity> rename(String newName) async {
+    final String newPath = path.replaceRange(
+      path.lastIndexOf(Platform.pathSeparator) + 1,
+      null,
+      newName,
+    );
+
+    _entity = await _entity.rename(newPath);
+
+    return this;
+  }
+
+  @override
+  SystemEntity renameSync(String newName) {
+    final String newPath = path.replaceRange(
+      path.lastIndexOf(Platform.pathSeparator) + 1,
+      null,
+      newName,
+    );
+
+    _entity = _entity.renameSync(newPath);
+
+    return this;
   }
 }

@@ -34,15 +34,6 @@ abstract class IEntityHelper {
   void pasteSync(String dest);
   Future<void> paste(String dest);
 
-  void deleteSync(IEntity entity);
-  Future<void> delete(IEntity entity);
-
-  void deleteAllSync(List<IEntity> entities);
-  Future<void> deleteAll(List<IEntity> entities);
-
-  void renameSync(IEntity entity, String newName);
-  Future<void> rename(IEntity entity, String newName);
-
-  void renameAllSync(List<IEntity> entities, String newName);
-  Future<void> renameAll(List<IEntity> entities, String newName);
+  IEntity createSync(String path, EntityType type);
+  Future<IEntity> create(String path, EntityType type);
 }

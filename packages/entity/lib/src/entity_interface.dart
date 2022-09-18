@@ -24,6 +24,12 @@ abstract class IEntity {
   bool get isLink => type == EntityType.link;
   bool get isFile => type == EntityType.file;
 
+  Future<IEntity> rename(String newName);
+  IEntity renameSync(String newName);
+
+  Future<void> delete({bool recursive = false});
+  void deleteSync({bool recursive = false});
+
   /// Compares this entity to [other].
   ///
   /// If you don't use [comparator] parameter,
@@ -35,4 +41,7 @@ abstract class IEntity {
     comparator ??= EntityComparator();
     return comparator.compare(this, other);
   }
+
+  @override
+  String toString() => "Name: $name, Type: $type, Path: $path";
 }

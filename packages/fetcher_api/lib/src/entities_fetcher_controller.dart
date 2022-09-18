@@ -73,21 +73,6 @@ abstract class IEntitiesFetcherController with ChangeNotifier {
 
   void reload();
 
-  // Future<void> fetch<T>(T path) async {
-  //   if (inProgress) {
-  //     fetcher.cancel();
-  //     inProgress = false;
-  //   }
-
-  //   inProgress = true;
-  //   entities.clear();
-  //   entities
-  //     ..addAll(await fetcher.fetch(path))
-  //     ..removeWhere((entity) => !showHidden && entity.name.startsWith("."));
-  //   sortEntities();
-  //   inProgress = false;
-  // }
-
   void sortEntities() {
     late final List<IEntity> result;
 
