@@ -31,9 +31,17 @@ abstract class IEntityHelper {
     clipboard.addAll(entities);
   }
 
+  bool canPaste() => currentOperation != null && clipboard.isNotEmpty;
+
   void pasteSync(String dest);
   Future<void> paste(String dest);
 
-  IEntity createSync(String path, EntityType type);
-  Future<IEntity> create(String path, EntityType type);
+  IEntity createDirSync(String path);
+  Future<IEntity> createDir(String path);
+
+  IEntity createFileSync(String path);
+  Future<IEntity> createFile(String path);
+
+  IEntity createLinkSync(String path, String target);
+  Future<IEntity> createLink(String path, String target);
 }

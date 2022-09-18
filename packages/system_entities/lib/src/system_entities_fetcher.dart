@@ -46,7 +46,9 @@ class SystemEntitiesFetcher extends IEntitiesFetcher<Directory> {
       },
       onDone: () {
         if (_completer != null) {
-          _completer?.complete(entities);
+          if (!_completer!.isCompleted) {
+            _completer?.complete(entities);
+          }
         }
       },
     );

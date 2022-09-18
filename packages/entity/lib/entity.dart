@@ -6,4 +6,4 @@ export 'package:entity/src/entity_stats.dart' show IEntityStats;
 export 'package:entity/src/entity_comparator.dart'
     show EntityComparator, SortType;
 export 'package:entity/src/utils.dart' show Utils;
-export 'package:entity/src/entity_helper.dart' show IEntityHelper;
+export 'package:entity/src/entity_helper.dart' show IEntityHelper, Operation;

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:entity/entity.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:system_entities/src/system_entitie_helper.dart';
 
 import 'package:system_entities/system_entities.dart';
 
@@ -68,11 +67,10 @@ void main() async {
       test(
         "Create directory test async",
         () async {
-          final SystemEntitieHelper helper = SystemEntitieHelper();
+          final SystemEntityHelper helper = SystemEntityHelper();
 
-          final SystemEntity entity = await helper.create(
-              "${controller.currentDir.path}/another_test_dir",
-              EntityType.directory);
+          final SystemEntity entity = await helper
+              .createDir("${controller.currentDir.path}/another_test_dir");
 
           expect(entity.type, EntityType.directory);
           expect(entity.name, "another_test_dir");
@@ -94,11 +92,10 @@ void main() async {
       test(
         "Create directory test sync",
         () {
-          final SystemEntitieHelper helper = SystemEntitieHelper();
+          final SystemEntityHelper helper = SystemEntityHelper();
 
-          final SystemEntity entity = helper.createSync(
-              "${controller.currentDir.path}/another_test_dir",
-              EntityType.directory);
+          final SystemEntity entity = helper
+              .createDirSync("${controller.currentDir.path}/another_test_dir");
 
           expect(entity.type, EntityType.directory);
           expect(entity.name, "another_test_dir");

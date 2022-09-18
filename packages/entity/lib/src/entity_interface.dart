@@ -24,6 +24,8 @@ abstract class IEntity {
   bool get isLink => type == EntityType.link;
   bool get isFile => type == EntityType.file;
 
+  String? get linkTarget;
+
   Future<IEntity> rename(String newName);
   IEntity renameSync(String newName);
 

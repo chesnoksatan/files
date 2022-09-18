@@ -71,4 +71,10 @@ class SystemEntity extends IEntity {
 
     return this;
   }
+
+  @override
+  String? get linkTarget {
+    if (isLink) return (_entity as Link).targetSync();
+    return null;
+  }
 }
