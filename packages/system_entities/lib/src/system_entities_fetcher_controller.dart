@@ -30,7 +30,7 @@ class SystemEntitiesFetcherController extends IEntitiesFetcherController {
       entities.removeWhere((entity) => entity.path == event.path);
       sortEntities();
     } else {
-      // TODO: Add support for FileSystemMoveEvent && FileSystemDeleteEvent
+      // TODO: Add support for FileSystemMoveEvent && FileSystemCreateEvent
       reload();
     }
   }

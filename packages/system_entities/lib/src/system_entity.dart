@@ -19,7 +19,8 @@ class SystemEntity extends IEntity {
 
   @override
   EntityType get type {
-    final FileSystemEntityType systemType = FileSystemEntity.typeSync(path);
+    final FileSystemEntityType systemType =
+        FileSystemEntity.typeSync(path, followLinks: false);
 
     if (systemType == FileSystemEntityType.file) {
       return EntityType.file;

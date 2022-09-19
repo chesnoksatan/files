@@ -27,9 +27,13 @@ class EntityComparator {
       case SortType.modified:
         return first.stats.modified.compareTo(second.stats.modified);
       case SortType.extension:
-        return first.mimeType
-            .toLowerCase()
-            .compareTo(second.mimeType.toLowerCase());
+        if (first.extension != null && second.extension != null) {
+          return first.extension!
+              .toLowerCase()
+              .compareTo(second.extension!.toLowerCase());
+        } else {
+          return 0;
+        }
       // NOTE: probably not good idea
       case SortType.size:
         return first.stats.size.compareTo(second.stats.size);

@@ -17,8 +17,9 @@ abstract class IEntity {
 
   IconData get icon =>
       isDirectory ? Icons.folder : Utils.getIconForMimeType(mimeType);
-  String get mimeType => Utils.getMimeType(path);
+  String? get mimeType => Utils.getMimeType(path);
   String get name => Utils.getEntityName(path);
+  String? get extension => Utils.getEntityExtension(path);
 
   bool get isDirectory => type == EntityType.directory;
   bool get isLink => type == EntityType.link;

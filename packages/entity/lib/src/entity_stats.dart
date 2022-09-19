@@ -8,4 +8,8 @@ abstract class IEntityStats {
   DateTime get accessed;
 
   EntityPermissions get permissions;
+
+  @override
+  String toString() =>
+      "Size: $size, Changed date: $changed, Permissions: ${permissions.modeString}";
 }

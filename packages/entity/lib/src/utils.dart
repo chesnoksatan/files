@@ -2,8 +2,9 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart' show Icons, IconData;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:mime/mime.dart' show lookupMimeType;
+import 'package:mime/mime.dart' show lookupMimeType, extensionFromMime;
 
+// TODO: more icons
 const Map<String, IconData> iconsPerMime = {
   "application/java-archive": MdiIcons.languageJava,
   "application/json": MdiIcons.codeBraces,
@@ -45,19 +46,25 @@ class Utils {
   Utils._();
 
   static IconData getIconForPath(String path) {
-    return iconsPerMime[getMimeType(path)] ?? Icons.insert_drive_file_outlined;
+    return getIconForMimeType(getMimeType(path));
   }
 
-  static IconData getIconForMimeType(String mimeType) {
+  static IconData getIconForMimeType(String? mimeType) {
+    if (mimeType == null) return Icons.insert_drive_file_outlined;
     return iconsPerMime[mimeType] ?? Icons.insert_drive_file_outlined;
   }
 
-  // The "octet-stream" subtype is used to indicate that a body contains arbitrary binary data.
-  static String getMimeType(String path) {
-    return lookupMimeType(path) ?? "application/octet-stream";
+  static String? getMimeType(String path) {
+    return lookupMimeType(path);
   }
 
   static String getEntityName(String path) {
     return path.split(Platform.pathSeparator).last;
+  }
+
+  static String? getEntityExtension(String path) {
+    var index = path.lastIndexOf('.');
+    if (index < 0 || index + 1 >= path.length) return null;
+    return path.substring(index + 1).toLowerCase();
   }
 }

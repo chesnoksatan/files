@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 abstract class IEntitiesFetcherController with ChangeNotifier {
   IEntitiesFetcher fetcher;
-  final EntityComparator comparator = EntityComparator();
+  final EntityComparator _comparator = EntityComparator();
 
   final List<IEntity> entities = List.empty(growable: true);
 
@@ -55,18 +55,18 @@ abstract class IEntitiesFetcherController with ChangeNotifier {
     }
   }
 
-  bool get ascending => comparator.ascending;
+  bool get ascending => _comparator.ascending;
   set ascending(bool flag) {
-    if (comparator.ascending != flag) {
-      comparator.ascending = flag;
+    if (_comparator.ascending != flag) {
+      _comparator.ascending = flag;
       sortEntities();
     }
   }
 
-  SortType get sortType => comparator.sortType;
+  SortType get sortType => _comparator.sortType;
   set sortType(SortType type) {
-    if (comparator.sortType != type) {
-      comparator.sortType = type;
+    if (_comparator.sortType != type) {
+      _comparator.sortType = type;
       sortEntities();
     }
   }
@@ -83,17 +83,31 @@ abstract class IEntitiesFetcherController with ChangeNotifier {
       final List<IEntity> files =
           entities.where((element) => !element.isDirectory).toList();
 
-      directories.sort(((a, b) => comparator.compare(a, b)));
-      files.sort(((a, b) => comparator.compare(a, b)));
+      directories.sort(((a, b) => _comparator.compare(a, b)));
+      files.sort(((a, b) => _comparator.compare(a, b)));
 
       result = [...directories, ...files];
     } else {
-      result = List.from(entities)..sort((a, b) => comparator.compare(a, b));
+      result = List.from(entities)..sort((a, b) => _comparator.compare(a, b));
     }
 
     entities
       ..clear()
       ..addAll(result);
     notifyListeners();
+  }
+
+  IEntity? getEntityByPath(String path) {
+    for (final IEntity entity in entities) {
+      if (entity.path == path) return entity;
+    }
+    return null;
+  }
+
+  IEntity? getEntityByName(String name) {
+    for (final IEntity entity in entities) {
+      if (entity.name == name) return entity;
+    }
+    return null;
   }
 }

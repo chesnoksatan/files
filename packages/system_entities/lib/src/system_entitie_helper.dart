@@ -8,6 +8,7 @@ class SystemEntityHelper extends IEntityHelper {
   @override
   Future<void> paste(String dest) async {
     if (canPaste()) {
+      currentOperation = null;
       for (final IEntity entity in clipboard) {
         final String newPath = dest + entity.name;
 
@@ -32,6 +33,7 @@ class SystemEntityHelper extends IEntityHelper {
   @override
   void pasteSync(String dest) {
     if (canPaste()) {
+      currentOperation = null;
       for (final IEntity entity in clipboard) {
         final String newPath = dest + entity.name;
 
